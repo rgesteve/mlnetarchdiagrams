@@ -1,0 +1,96 @@
+classDiagram 
+    class IPredictionTransformer 
+    
+    class IFeaturePredictionTransformer {
+        FeatureColumnName : string
+        FeatureColumnType : DataViewType
+    }
+
+    IPredictionTransformer <-- IFeaturePredictionTransformer  
+
+    class PredictionTransformerBase~TModel~ {
+        Model 
+        ModelAsPredictor : IPredictor
+        Host : IHost
+        BindableMapper : ISchemaBindableMapper
+        TrainSchema : DataViewSchema
+        Scorer : RowToRowScorerBase
+        GetOutputSchema()
+        Transform( :IDataView )
+    }
+    class SingleFeaturePredictionTransformerBase~TModel~ {
+        FeatureColumnName : string
+        FeatureColumnType : DataViewType
+        GetGenericScorer()
+        GetOutputSchema()
+        SaveCore()
+        SaveModel()
+    }
+    class RegressionPredictionTransformer {
+        SaveCore()
+    }
+    class BinaryPredictionTransformer {
+        ThresholdColumn : string
+        Threshold : float
+        LabelColumnName : string
+        SetScorer() 
+        InitializationLogic()
+        SaveCore()
+    }
+
+    PredictionTransformerBase <-- SingleFeaturePredictionTransformerBase
+    SingleFeaturePredictionTransformerBase <-- RegressionPredictionTransformer
+    SingleFeaturePredictionTransformerBase <-- BinaryPredictionTransformer
+
+    class IValueMapper {
+        InputType : DataViewType
+        OutputType : DataViewType
+        GetMapper()
+    }
+    class IValueMapperDist {
+        DistType : DataViewType
+        GetMapper()
+    }
+    IValueMapper <-- IValueMapperDist
+
+    class SchemaBindablePredictorWrapperBase {
+    Predictor : IPredictor
+    ScoreType : DataViewType
+    ValueMapper
+    BindCore()
+    GetPredictionGetter()
+    GetScoreType()
+    GetValueGetter()
+    }
+    class SchemaBindableBinaryPredictorWrapper {
+        BindCore()
+    }
+    SchemaBindablePredictorWrapperBase <-- SchemaBindableBinaryPredictorWrapper 
+
+    class TransformBase {
+        Host : IHost 
+        Source : IDataView
+        Transform( :IDataView )
+    }
+    class RowToRowTransformBase 
+    class RowToRowMapperTransformBase 
+    TransformBase <-- RowToRowTransformBase
+    RowToRowTransformBase <-- RowToRowMapperTransformBase 
+
+    class IPredictor {
+        PredictionKind
+    }
+    class IPredictorProducing~TOutput~
+    class ModelParametersBase~TOutput~ {
+        Host : IHost 
+        PredictionKind
+        SaveCore()
+    }
+    class TreeEnsembleModelParameters
+    class GamModelParametersBase
+    IPredictor <-- IPredictorProducing
+    IPredictorProducing <-- ModelParametersBase 
+    ModelParametersBase <-- TreeEnsembleModelParameters
+    ModelParametersBase <-- GamModelParametersBase
+    
+        
