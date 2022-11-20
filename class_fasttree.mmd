@@ -76,3 +76,23 @@ classDiagram
         AsPfaCore()
         ToOldIni()
     }
+
+    class ModelParametersBase~float~
+    class TreeEnsembleModelParameters {
+        InnerOptions
+        InputType
+        FeatureContributionMap()
+        GetFeatureWeights()
+        GetLeaf()
+        GetLeafValue()
+        GetSortedFeatureGains()
+    }
+    class TreeEnsembleModelParametersBasedOnRegressionTree
+    class LightGbmRegressionModelParameters
+    class LightGbmBinaryModelParameters
+    class LightGbmRankingModelParameters
+    ModelParametersBase~float~ <-- TreeEnsembleModelParameters
+    TreeEnsembleModelParameters <-- TreeEnsembleModelParametersBasedOnRegressionTree
+    TreeEnsembleModelParametersBasedOnRegressionTree <-- LightGbmRegressionModelParameters
+    TreeEnsembleModelParametersBasedOnRegressionTree <-- LightGbmBinaryModelParameters
+    TreeEnsembleModelParametersBasedOnRegressionTree <-- LightGbmRankingModelParameters
