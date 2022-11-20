@@ -1,14 +1,20 @@
 classDiagram 
     class InternalRegressionTree {
+        _gainPValue
         _maxOutput : double
         _previousLeafValue
         _splitGain : double[]
         GtChild
         LteChild
         MaxNumLeaves
+        MaxNumNodes
+        MaxOutput 
+        NumLeaves 
+        NumNodes 
         Thresholds
         Weights
         LeafValues
+        RawThresholds 
         ActiveFeatures
         CategoricalSplit
         CategoricalSplitFeatureRanges
@@ -16,11 +22,57 @@ classDiagram
         DefaultValueForMissing
         GainMap 
         GainPValues
+        PreviousLeafValues
+        SplitFeatures 
+        SplitGains
+        Thresholds
+        Create(numLeaves : int, splitFeatures : int[], splitGain : double[], rawThresholds : double[])
         LeafValue()
         SumupValue()
+        AddOutputsToScores(:Dataset, double[], double)
+        AppendFeatureContributions()
+        GetCategoricalSplitFromBytes()
+        GetCategoricalSplitFromIndices()
+        GetFeatureValue()
+        GetGtChildForNode()
+        GetLteChildForNode(node : int)
+        GetNodesLeaves(node : int)
+        GetHashCode()
+        GetLeaf(feat : in VBuffer<float>, path : ref List<int>)
+        GetLeaf(feat : in VBuffer<float>)
+        GetLeaf(binnedInstance : int[])
+        GetLeaf(featureBins : Row)
+        GetLeafCore(nonBinnedInstance : ReadOnlySpan<float> /* ... */)
+        GetLeafCore(featIndices : ReadOnlySpan<int> /* ... */)
+        GetLeafFrom()
+        GetOutput(feat : in VBuffer<float>)
+        GetOutput(leaf : int)
+        GetOutput(binnedInstance : int[])
+        GetOutput(:Dataset)
+        LeafValue(leaf : int)
+        Load()
+        OptimizePathToLeaf()
+        PathToLeaf(currentNodeIndex : int, leafIndex : int, )
+        PathToLeaf()
+        PopulateRawThresholds(:Dataset)
+        RawThreshold(node : int)
+        RemapFeatures()
+        Save(:ModelSaveContext, :TreeType)
+        Save(:ModelSaveContext)
+        ScaleOutputsBy(:double)
+        SetLeafValue(leaf : int, newValue : double)
+        SetOutput()
+        Split()
+        SwapNodePositions()
+        Threshold(node : int)
+        CheckValid()
         SizeInBytes()
         ShiftOutputs()
         UpdateOutputWithDelta()
         ToByteArray()
+        ToTreeEnsembleFormat()
+        ToTreeEnsembleFormatForCategoricalSplit()
+        AsPfa()
+        AsPfaCore()
         ToOldIni()
     }
