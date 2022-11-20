@@ -20,8 +20,8 @@
 			"extensions": [
 				"yzhang.markdown-all-in-one",
 				"bierner.markdown-mermaid",
-        "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
-        "vstirbu.vscode-mermaid-preview"
+		        "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+		        "vstirbu.vscode-mermaid-preview"
 			]
 		}
 	},
