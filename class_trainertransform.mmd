@@ -15,13 +15,14 @@ classDiagram
         BindableMapper : ISchemaBindableMapper
         TrainSchema : DataViewSchema
         Scorer : RowToRowScorerBase
-        GetOutputSchema()
+        InitializeLogic : (:IHost, :ModelLoadContext)
+        GetOutputSchema(:DataViewSchema) : DataViewSchema
         Transform( :IDataView )
     }
     class SingleFeaturePredictionTransformerBase~TModel~ {
         FeatureColumnName : string
         FeatureColumnType : DataViewType
-        GetGenericScorer()
+        GetGenericScorer: () : GenericScorer
         GetOutputSchema()
         SaveCore()
         SaveModel()
@@ -121,6 +122,26 @@ classDiagram
       OutputSchema : DataViewSchema
       Bindable : ISchemaBindableMapper
       GetInputColumnRoles : () : IEnumerable~KeyValuePair~RoleMappedSchema.ColumnRole, string~~
+    }
+
+    class GenericScorer {
+      OutputSchema
+      ApplyToDataCore
+      Create
+      GetBindings
+      GetGetters
+      SaveCore : (:ModelSaveContext)
+      WantParallelCursors
+    }
+
+    class TrainerEstimatorBase~TTransformer,TModel~ {
+      FeatureColumn
+      LabelColumn
+      Host
+      Info
+      Fit : (:IDataView) 
+      GetOutputColumnsCore : (:SchemaShape)
+      GetOutputSchema : (:SchemaShape)
     }
     
         
