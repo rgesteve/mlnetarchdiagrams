@@ -63,7 +63,7 @@ classDiagram
     GetValueGetter()
     }
     class SchemaBindablePredictorWrapper {
-    BindCore
+    BindCore : (:IChannel, :RoleMappedSchema)
     Create : (:HostEnvironment, :ModelLoadContext) : SchemaBindablePredictorWrapper
     GetScoreColumnKind : (:IPredictor) : string
     SaveAsOnnxCore
