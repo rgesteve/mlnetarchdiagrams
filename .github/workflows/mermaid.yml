@@ -28,7 +28,7 @@ jobs:
         uses: neenjaw/compile-mermaid-markdown-action@0.3.1
         with:
           files: ${{ steps.getfile.outputs.files }}
-          output: '.resources'
+          output: 'output'
         env:
           HIDE_CODEBLOCKS: 1
           ABSOLUTE_IMAGE_LINKS: 1
@@ -37,4 +37,10 @@ jobs:
       - name: Show Changes
         run: |
           git status
+
+      # For manual inspection of the generated artifacts
+      - uses: actions/upload-artifact@v2.3.1
+        with:
+          name: output
+          path: ./test-output
   
