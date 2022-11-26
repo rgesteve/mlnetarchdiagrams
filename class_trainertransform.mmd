@@ -215,6 +215,27 @@ classDiagram
     ScorerBindingsBase <-- RowToRowScorerBase_BindingsBase
     ColumnBindingsBase <-- ScorerBindingsBase
 
+    class DataViewRow {
+      Position : ulong
+      Batch : long
+      Schema : DataViewSchema
+      GetIdGetter()
+      IsColumnActive(:DataViewSchema.Column) : bool
+      GetGetter()
+    }
+    class DataViewRowCursor {
+      MoveNext()
+    }
+    class SynchronizedCursorBase
+    class RowToRowScorerBase_Cursor {
+      Schema
+      GetGetter()
+      IsColumnActive()
+    }
+    DataViewRow <-- DataViewRowCursor
+    DataViewRowCursor <-- SynchronizedCursorBase
+    SynchronizedCursorBase <-- RowToRowScorerBase_Cursor
+
     class IPredictor {
         PredictionKind
     }
@@ -251,5 +272,55 @@ classDiagram
       GetOutputColumnsCore : (:SchemaShape)
       GetOutputSchema : (:SchemaShape)
     }
-    
-        
+    class TrainerEstimatorBaseWithGroupId~TTransformer,TModel~
+    TrainerEstimatorBase~TTransformer,TModel~  <-- TrainerEstimatorBaseWithGroupId~TTransformer,TModel~
+
+    class LightGbmTrainerBase~TOptions,TOutput,TTransformer,TModel~ {
+      FeatureCount 
+      GbmOptions
+      Info
+      LightGbmTrainerOptions
+      ParallelTraining
+      TrainedEnsemble
+      CheckAndUpdateParametersBeforeTraining()
+      CheckDataValid()
+      ConstructCategoricalFeatureMetadata()
+      ConvertNanLabels()
+      CopyToArray()
+      CopyToCsr()
+      CreateCursorFactory()
+      CreateDatasetFromSamplingData()
+      CreatePredictor()
+      DefaultLearningRate()
+      DefaultMinDataPerLeaf()
+      DefaultNumLeaves()
+      DetectDensity()
+      GetCategoricalBoundires()
+      GetCategoricalMetadata()
+      GetDefaultParameters()
+      GetFeatureValueDense()
+      GetFeatureValueSparse()
+      GetGbmParameters()
+      GetMetaInfo()
+      GetNumSampleRow()
+      InitializeBeforeTraining()
+      InitParallelTraining()
+      LoadDataset()
+      LoadTrainingData()
+      LoadValidationData()
+      MoveMany()
+      TrainCore()
+      TrainModelCore(:TrainContext)
+    }
+    TrainerEstimatorBaseWithGroupId~TTransformer,TModel~ <-- LightGbmTrainerBase~TOptions,TOutput,TTransformer,TModel~
+
+    class LightGbmRegressionTrainer {
+      PredictionKind
+      CheckAndUpdateParametersBeforeTraining()
+      CheckDataValid()
+      CreatePredictor()
+      Fit(trainData : IDataView, validationData : IDataView)
+      GetOutputColumnsCore(:SchemaShape)
+      MakeTransformer()
+    }
+    LightGbmTrainerBase~TOptions,float,TTransformer,TModel~ <-- LightGbmRegressionTrainer
