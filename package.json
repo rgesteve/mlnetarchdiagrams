@@ -1,0 +1,13 @@
+{
+    "repository": "https://github.com/rgesteve/malnetarchdiagrams",
+    "scripts": {
+      "diagrams": "mmdc -i class_trainertransform.mmd -o class_trainertransform.pdf"
+    },
+    "workspaces": [
+      "packages/*"
+    ],
+    "devDependencies": {
+      "@mermaid-js/mermaid-cli": "^9.2.2"
+    },
+    "version": "0.0.1"
+  }
