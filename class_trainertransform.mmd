@@ -9,7 +9,7 @@ classDiagram
         FeatureColumnType : DataViewType
     }
 
-    IPredictionTransformer~TModel~ <-- IFeaturePredictionTransformer  
+    IPredictionTransformer~TModel~ <-- IFeaturePredictionTransformer
 
     class PredictionTransformerBase~TModel~ {
         Model 
@@ -58,10 +58,14 @@ classDiagram
     }
     IValueMapper <-- IValueMapperDist
 
+    class ISchemaBindableMapper {
+      Bind : (:IHostEnvironment, :RoleMappedSchema) : ISchemaBoundMapper
+    }
     class SchemaBindablePredictorWrapperBase {
     Predictor : IPredictor
     ScoreType : DataViewType
-    ValueMapper
+    ValueMapper : IValueMapper
+    ISchemaBindableMapper.Bind()
     BindCore()
     GetPredictionGetter(:DataViewRow, colSrc : int) : Delegate
     GetScoreType()
@@ -78,8 +82,11 @@ classDiagram
     class SchemaBindableBinaryPredictorWrapper {
         BindCore()
     }
+    ISchemaBindableMapper <-- SchemaBindablePredictorWrapperBase
     SchemaBindablePredictorWrapperBase <-- SchemaBindableBinaryPredictorWrapper 
     SchemaBindablePredictorWrapperBase <-- SchemaBindablePredictorWrapper 
+
+    class SingleValueRowMapper
 
     class PredictionKind {
     BinaryClassification
@@ -252,16 +259,29 @@ classDiagram
     ModelParametersBase <-- TreeEnsembleModelParameters
     ModelParametersBase <-- GamModelParametersBase
 
-    class ISchemaBindableMapper {
-      Bind : (:IHostEnvironment, :RoleMappedSchema) : ISchemaBoundMapper
-    }
-
     class ISchemaBoundMapper {
       InputRoleMappedSchema : RoleMappedSchema
       OutputSchema : DataViewSchema
       Bindable : ISchemaBindableMapper
       GetInputColumnRoles : () : IEnumerable~KeyValuePair~RoleMappedSchema.ColumnRole, string~~
     }
+    class ISchemaBoundRowMapper {
+        InputSchema : DataViewSchema
+        GetDependenciesForNewColumns()
+        GetRow(:DataViewRow, activeColumns : IEnumerable~DataViewSchema.Column~)
+    }
+    class SchemaBindablePredictorWrapperBase_SingleValueRowMapper {
+        _parent : SchemaBindablePredictorWrapperBase
+        Bindable : ISchemaBindableMapper
+        InputRoleMappedSchema : RoleMappedSchema
+        InputSchema
+        OutputSchema : DataViewSchema
+        GetInputColumnRoles()
+        ISchemaBoundRowMapper.GetDependenciesForNewColumns()
+        ISchemaBoundRowMapper.GetRow()
+    }
+    ISchemaBoundMapper <-- ISchemaBoundRowMapper
+    ISchemaBoundRowMapper <-- SchemaBindablePredictorWrapperBase_SingleValueRowMapper
 
     class TrainerEstimatorBase~TTransformer,TModel~ {
       FeatureColumn
