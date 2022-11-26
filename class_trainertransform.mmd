@@ -30,7 +30,7 @@ classDiagram
         SaveCore()
         SaveModel()
     }
-    class RegressionPredictionTransformer {
+    class RegressionPredictionTransformer~TModel~ {
         SaveCore()
     }
     class BinaryPredictionTransformer~TModel~ {
@@ -43,9 +43,9 @@ classDiagram
     }
 
     IPredictionTransformer~TModel~ <-- PredictionTransformerBase  
-    PredictionTransformerBase <-- SingleFeaturePredictionTransformerBase
-    SingleFeaturePredictionTransformerBase <-- RegressionPredictionTransformer
-    SingleFeaturePredictionTransformerBase <-- BinaryPredictionTransformer~TModel~
+    PredictionTransformerBase <-- SingleFeaturePredictionTransformerBase~TModel~
+    SingleFeaturePredictionTransformerBase~TModel~ <-- RegressionPredictionTransformer~TModel~
+    SingleFeaturePredictionTransformerBase~TModel~ <-- BinaryPredictionTransformer~TModel~
 
     class IValueMapper {
         InputType : DataViewType
@@ -266,13 +266,27 @@ classDiagram
     class TrainerEstimatorBase~TTransformer,TModel~ {
       FeatureColumn
       LabelColumn
+      WeightColumn
       Host
       Info
+      PredictionKind
+      ITrainer.PredictionKind
+      NoTrainingInstancesMessage
+      CheckInputSchema()
+      CheckLabelCompatible()
       Fit : (:IDataView) 
       GetOutputColumnsCore : (:SchemaShape)
       GetOutputSchema : (:SchemaShape)
+      ITrainer.Train(:TrainContext)
+      MakeRoles()
+      MakeTransformer()
+      TrainModelCore()
+      TrainTransformer()
     }
-    class TrainerEstimatorBaseWithGroupId~TTransformer,TModel~
+    class TrainerEstimatorBaseWithGroupId~TTransformer,TModel~ {
+        GroupIdColumn
+        MakeRoles()
+    }
     TrainerEstimatorBase~TTransformer,TModel~  <-- TrainerEstimatorBaseWithGroupId~TTransformer,TModel~
 
     class LightGbmTrainerBase~TOptions,TOutput,TTransformer,TModel~ {
