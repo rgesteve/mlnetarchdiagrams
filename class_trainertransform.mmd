@@ -1,12 +1,15 @@
 classDiagram 
-    class IPredictionTransformer 
+
+    class IPredictionTransformer~TModel~ {
+      Model : TModel
+    }
     
     class IFeaturePredictionTransformer {
         FeatureColumnName : string
         FeatureColumnType : DataViewType
     }
 
-    IPredictionTransformer <-- IFeaturePredictionTransformer  
+    IPredictionTransformer~TModel~ <-- IFeaturePredictionTransformer  
 
     class PredictionTransformerBase~TModel~ {
         Model 
@@ -30,7 +33,7 @@ classDiagram
     class RegressionPredictionTransformer {
         SaveCore()
     }
-    class BinaryPredictionTransformer {
+    class BinaryPredictionTransformer~TModel~ {
         ThresholdColumn : string
         Threshold : float
         LabelColumnName : string
@@ -39,9 +42,10 @@ classDiagram
         SaveCore()
     }
 
+    IPredictionTransformer~TModel~ <-- PredictionTransformerBase  
     PredictionTransformerBase <-- SingleFeaturePredictionTransformerBase
     SingleFeaturePredictionTransformerBase <-- RegressionPredictionTransformer
-    SingleFeaturePredictionTransformerBase <-- BinaryPredictionTransformer
+    SingleFeaturePredictionTransformerBase <-- BinaryPredictionTransformer~TModel~
 
     class IValueMapper {
         InputType : DataViewType
@@ -87,15 +91,129 @@ classDiagram
     Clustering
     }
 
+    %% The transform tree
+
+    class IDataView
+    class IDataTransform {
+      Source : IDataView
+    }
     class TransformBase {
         Host : IHost 
         Source : IDataView
-        Transform( :IDataView )
+        CanShuffle
+        IDataView.Schema
+        GetRowCount()
+        GetRowCursor()
+        GetRowCursorCore()
+        GetRowCursorSet()
     }
-    class RowToRowTransformBase 
-    class RowToRowMapperTransformBase 
+    class RowToRowTransformBase {
+      GetRowCount()
+    }
+    class RowToRowMapperTransformBase {
+      InputSchema
+      CreateGetters()
+      GetDependenciesCore()
+      IRowToRowMapper.GetDependencies()
+      IRowToRowMapper.GetRow()
+      MapColumnIndex()
+    }       
+    class RowToRowScorerBase {
+      Bindable
+      ApplyToData (:IHostEnvironment, :IDataView)
+      ApplyToDataCore()
+      CreateGetters()
+      GetActive()
+      GetDependenciesCore()
+      GetGetterFromRow()
+      GetGetterFromRow~T~()
+      GetGetters()
+      GetGettersFromRow()
+      GetRowCursorCore()
+      GetRowCursorSet()
+      ITransformTemplate.ApplyToData()
+      MapColumnIndex()
+      SaveCore()
+      SaveModel()
+      ShouldUseParallelCursors()
+      WantParallelCursors()
+    }
+
+    class GenericScorer {
+      OutputSchema
+      ApplyToDataCore
+      Create
+      GetBindings
+      GetGetters
+      SaveCore : (:ModelSaveContext)
+      WantParallelCursors
+    }
+    class BinaryClassifierScorer
+    class PredictedLabelScorerBase {
+        Bindings
+        OutputSchema
+        EnsureCahedPosition()
+        GetBindings()
+        GetGetters()
+        GetPredictedLabelGetter()
+        ICanSaveOnnx.CanSaveOnnx()
+        ICanSavePfa.CanSavePfa()
+        ISaveAsOnnx.SaveAsOnnx()
+        PredictedLabelPfa()
+    }
+    IDataView <-- IDataTransform
+    IDataTransform <-- TransformBase
     TransformBase <-- RowToRowTransformBase
     RowToRowTransformBase <-- RowToRowMapperTransformBase 
+    RowToRowMapperTransformBase <-- RowToRowScorerBase
+    RowToRowScorerBase <-- GenericScorer
+    PredictedLabelScorerBase <-- BinaryClassifierScorer
+    RowToRowScorerBase <-- PredictedLabelScorerBase
+
+    class BinaryClassifierScorer
+    class PredictedLabelScorerBase
+
+    class GenericScorer_Bindings {
+      ApplyToSchema(:IHostEnvironment, :DataViewSchema) : GenericScorer_Bindings 
+      Create()
+      SaveModel()
+    }
+    class RowToRowScorerBase_BindingsBase {
+      RowToRowMapper : ISchemaBoundRowMapper
+    }
+    class ScorerBindingsBase {
+      DerivedColumnnCount
+      Suffix : string
+      Mapper : ISchemaBoundMapper
+      GetActiveMapperColumns()
+      GetAnnotationCore()
+      GetAnnotationTypeCore()
+      GetColumnTypeCore()
+      GetOutputNames()
+      GetScoreColumnSetId()
+      LoadBaseInfo()
+      SaveBase()
+      SaveModel()
+      ScorerBindingsBase()
+    }
+    class ColumnBindingsBase {
+      Input : DataViewSchema
+      AsSchema : DataViewSchema
+      CreateSchema() : DataViewSchema
+      GetAnnotationCore()
+      GetAnnotationGetterDelegate()
+      GetAnnotationTypeCore()
+      GetAnnotationTypeOrNull()
+      GetAnnotationTypes()
+      GetColumnName()
+      MapColumnIndex()
+      MapInfoToCol(iinfo : int)
+      TryGetColumnIndex(name : string, out int col)
+      TryGetColumnIndexCore(name : string, out int info)
+    }
+    RowToRowScorerBase_BindingsBase <-- GenericScorer_Bindings
+    ScorerBindingsBase <-- RowToRowScorerBase_BindingsBase
+    ColumnBindingsBase <-- ScorerBindingsBase
 
     class IPredictor {
         PredictionKind
@@ -122,16 +240,6 @@ classDiagram
       OutputSchema : DataViewSchema
       Bindable : ISchemaBindableMapper
       GetInputColumnRoles : () : IEnumerable~KeyValuePair~RoleMappedSchema.ColumnRole, string~~
-    }
-
-    class GenericScorer {
-      OutputSchema
-      ApplyToDataCore
-      Create
-      GetBindings
-      GetGetters
-      SaveCore : (:ModelSaveContext)
-      WantParallelCursors
     }
 
     class TrainerEstimatorBase~TTransformer,TModel~ {
