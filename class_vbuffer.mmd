@@ -1,0 +1,19 @@
+classDiagram 
+    class VBuffer~T~ {
+      _values : T[]
+      _count
+      _indices
+      IsDense : bool
+      Length : int
+      Items()
+      Copy()
+      CopyTo()
+      CopyToDense()
+      DenseValues()
+      GetEditor()
+      GetValues() : ReadOnlySpan<T>
+      GetIndices() : ReadOnlySpan<int>
+      GetItemOrDefault(index : int)
+      GetItemOrDefault(index : int, destination: ref T)
+      ToString() : string
+    }
