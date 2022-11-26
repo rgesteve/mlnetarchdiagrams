@@ -58,9 +58,9 @@ classDiagram
     ScoreType : DataViewType
     ValueMapper
     BindCore()
-    GetPredictionGetter()
+    GetPredictionGetter(:DataViewRow, colSrc : int) : Delegate
     GetScoreType()
-    GetValueGetter()
+    GetValueGetter~TSrc, TDst~()
     }
     class SchemaBindablePredictorWrapper {
     BindCore : (:IChannel, :RoleMappedSchema)
