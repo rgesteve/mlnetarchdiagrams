@@ -62,10 +62,29 @@ classDiagram
     GetScoreType()
     GetValueGetter()
     }
+    class SchemaBindablePredictorWrapper {
+    BindCore
+    Create : (:HostEnvironment, :ModelLoadContext) : SchemaBindablePredictorWrapper
+    GetScoreColumnKind : (:IPredictor) : string
+    SaveAsOnnxCore
+    SaveAsPfaCore
+    SaveModel    
+    }
     class SchemaBindableBinaryPredictorWrapper {
         BindCore()
     }
     SchemaBindablePredictorWrapperBase <-- SchemaBindableBinaryPredictorWrapper 
+    SchemaBindablePredictorWrapperBase <-- SchemaBindablePredictorWrapper 
+
+    class PredictionKind {
+    BinaryClassification
+    MulticlassClassification
+    Regression
+    MultiOutputRegression
+    Ranking
+    AnomalyDetection
+    Clustering
+    }
 
     class TransformBase {
         Host : IHost 
