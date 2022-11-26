@@ -92,5 +92,16 @@ classDiagram
     IPredictorProducing <-- ModelParametersBase 
     ModelParametersBase <-- TreeEnsembleModelParameters
     ModelParametersBase <-- GamModelParametersBase
+
+    class ISchemaBindableMapper {
+      Bind : (:IHostEnvironment, :RoleMappedSchema) : ISchemaBoundMapper
+    }
+
+    class ISchemaBoundMapper {
+      InputRoleMappedSchema : RoleMappedSchema
+      OutputSchema : DataViewSchema
+      Bindable : ISchemaBindableMapper
+      GetInputColumnRoles : () : IEnumerable~KeyValuePair~RoleMappedSchema.ColumnRole, string~~
+    }
     
         
