@@ -4,5 +4,19 @@ classDiagram
       Item (index : int ) : DataViewSchema.Column
       Item (name : string)
     }
-    class DataViewSchema_Column
-    
+    class DataViewSchema_Builder {
+      AddColumn()
+      AddColumns()
+      ToSchema() : DataViewSchema
+    }
+    class DataViewSchema_Column {
+      Annotations
+      Index
+      IsHidden
+      Name
+      Type : DataViewType
+      ToString() : string
+    }
+    class DataViewType {
+      RawType : System.Type
+    }
