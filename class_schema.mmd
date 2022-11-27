@@ -79,3 +79,46 @@ classDiagram
       GetTypeString()
     }
     IReadOnlyList~SchemaShape_Column~ <-- SchemaShape
+
+    class RoleMappedSchema {
+      Feature : DataViewSchema_Column?
+      FeatureContributionString 
+      FeatureString : string
+      Group 
+      GroupString : string
+      Label : DataViewSchema_Column?
+      LabelString : string
+      Name 
+      NameString : string
+      Schema : DataViewSchema
+      Weight 
+      WeightString : string
+      GetColumnRoleNames()
+      GetColumnRoleNames(:ColumnRole)
+      GetColumnRoles()
+      GetColumns()
+      GetUniqueColumn(:ColumnRole)
+      Add(:Dictionary<string, List<DataViewSchema_Column>>, :ColumnRole, DataViewSchema_Column)
+      Copy()
+      CreatePair()
+      Has()
+      HasMultiple(:ColumnRole)
+      HasUnique(:ColumnRole)
+      MapFromNames()
+      PredefinedRolesHelper()
+    }
+    class ColumnRole {
+      Feature : ColumnRole
+      FeatureContributions 
+      Group 
+      Label 
+      Name 
+      Value 
+      Weight 
+      Bind(:string)
+    }
+
+    class RoleMappedData {
+      Data : IDataView
+      Schema : RoleMappedSchema
+    }
