@@ -283,6 +283,31 @@ classDiagram
     ISchemaBoundMapper <-- ISchemaBoundRowMapper
     ISchemaBoundRowMapper <-- SchemaBindablePredictorWrapperBase_SingleValueRowMapper
 
+    class IEstimator~TTransformer~ {
+      Fit(:IDataView) : TTransformer
+      GetOutputSchema(:SchemaShape) : SchemaShape
+    }
+    <<interface>> IEstimator~TTransformer~
+
+    class ITrainerEstimator~TTransformer, TModel~ {
+      Info : TrainerInfo
+    }
+    <<interface>> ITrainerEstimator~TTransformer, TModel~
+    IEstimator~TTransformer~ <-- ITrainerEstimator~TTransformer, TModel~
+
+    class ITrainer {
+      Info : TrainerInfo
+      PredictionKind : PredictionKind
+      Train(:TrainContext) : IPredictor
+    }
+    <<interface>> ITrainer
+
+    class ITrainer~TPredictor~ {
+      Train(:TrainContext) : TPredictor
+    }
+    <<interface>> ITrainer~TPredictor~ 
+    ITrainer <-- ITrainer~TPredictor~ 
+
     class TrainerEstimatorBase~TTransformer,TModel~ {
       FeatureColumn
       LabelColumn
@@ -303,6 +328,9 @@ classDiagram
       TrainModelCore()
       TrainTransformer()
     }
+    ITrainerEstimator~TTransformer, TModel~ <-- TrainerEstimatorBase~TTransformer,TModel~
+    ITrainer~TPredictor~ <-- TrainerEstimatorBase~TTransformer,TModel~
+
     class TrainerEstimatorBaseWithGroupId~TTransformer,TModel~ {
         GroupIdColumn
         MakeRoles()
