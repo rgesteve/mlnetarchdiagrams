@@ -1,0 +1,99 @@
+classDiagram 
+class LightGbmTrainerBase_OptionsBase {
+  NameMapping : Dictionary<string, string>
+  BatchSize
+  Booster : BoosterParameterBase_OptionsBase
+  BoosterFactory
+  CategoricalSmoothing
+  EarlyStoppingRound
+  HandleMissingValue
+  L2CategoricalRegularization
+  LearningRate 
+  MaximumBinCountPerFeature 
+  MaximumCategoricalSplitPointCount
+  MinimumExampleCountPerGroup
+  MinimumExampleCountPerLeaf 
+  NumberOfIterations 
+  NumberOfLeaves 
+  NumberOfThreads 
+  ParallelTrainer 
+  Seed 
+  Silent 
+  UseCategoricalSplit 
+  UseZeroAsMissingValue 
+  Verbose : bool = false
+  GetOptionName(:string) : string
+  ToDictionary(:IHost) : Dictionary<string, string>
+}
+class TrainerInputBaseWithGroupId {
+  RowGroupColumnName
+}
+class TrainerInputBaseWithWeight {
+  ExampleWeightColumnName
+}
+class TrainerInputBaseWithLabel {
+  LabelColumnName
+}
+class TrainerInputBase {
+    Caching : CachingOptions
+    FeatureColumnName : string
+    NormalizedFeatures : NormalizeOption
+    TrainingData : IDataView
+}
+TrainerInputBaseWithGroupId <-- LightGbmTrainerBase_OptionsBase
+TrainerInputBaseWithWeight <-- TrainerInputBaseWithGroupId
+TrainerInputBaseWithLabel <-- TrainerInputBaseWithWeight
+TrainerInputBase <-- TrainerInputBaseWithLabel
+
+class BoosterParameterBase_OptionsBase {
+    FeatureFraction
+    L1Regularization 
+    L2Regularization 
+    MaximumTreeDepth 
+    MinimumChildWeight 
+    MinimumSplitGain 
+    SubsampleFraction 
+    SubsampleFrequency
+    GetBooster() : BoosterParameterBase
+}
+class GradientBooster_Options {
+  BuildOptions()
+}
+class DartBooster_Options {
+  MaximumNumberOfDroppedTreesPerRound
+  SkipDropFraction
+  TreeDropFraction
+  UniformDrop
+  XGBoostDartMode
+  BuildOptions()
+}
+class IBoosterParameterFactory {
+   CreateComponent(:IHostEnvironment) : BoosterParameterBase
+}
+IBoosterParameterFactory <|-- BoosterParameterBase_OptionsBase
+BoosterParameterBase_OptionsBase <|-- GradientBooster_Options
+BoosterParameterBase_OptionsBase <|-- DartBooster_Options
+
+LightGbmTrainerBase_OptionsBase *-- BoosterParameterBase_OptionsBase
+
+class BoosterParameterBase {
+    BoosterName
+    BoosterOptions : BoosterParameterBase_OptionsBase
+    NameMapping : Dictionary<string, string>
+    UpdateParameters()
+    BuildFactory()
+}
+class GradientBooster {
+    BoosterName
+    FriendlyName
+    Name
+    BuildFactory()
+}
+class DartBooster {
+    BoosterName
+    FriendlyName
+    Name
+    BuildFactory()
+}
+BoosterParameterBase <-- GradientBooster
+BoosterParameterBase <-- DartBooster
