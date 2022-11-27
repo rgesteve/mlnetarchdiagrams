@@ -79,8 +79,8 @@ LightGbmTrainerBase_OptionsBase *-- BoosterParameterBase_OptionsBase
 class BoosterParameterBase {
     BoosterName
     BoosterOptions : BoosterParameterBase_OptionsBase
-    NameMapping : Dictionary<string, string>
-    UpdateParameters()
+    NameMapping : Dictionary~string, string~
+    UpdateParameters(Dictionary~string, object~)
     BuildFactory()
 }
 class GradientBooster {
