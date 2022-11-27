@@ -20,3 +20,31 @@ classDiagram
     class DataViewType {
       RawType : System.Type
     }
+    class PrimitiveDataViewType 
+    class KeyDataViewType
+    class StructuredDataViewType
+    class VectorDataViewType
+    class TextDataViewType
+    class NumberDataViewType
+    class RowIdDataViewType
+    class BooleanDataViewType
+    class DateTimeDataViewType
+    class DateTimeOffsetDataViewType
+    class TimeSpanDataViewType
+    class ImageDataViewType
+    class OnnxSequenceType
+    class OnnxMapType
+    DataViewType <-- PrimitiveDataViewType
+    PrimitiveDataViewType <-- KeyDataViewType
+    PrimitiveDataViewType <-- TextDataViewType
+    PrimitiveDataViewType <-- NumberDataViewType
+    PrimitiveDataViewType <-- RowIdDataViewType
+    PrimitiveDataViewType <-- BooleanDataViewType
+    PrimitiveDataViewType <-- DateTimeDataViewType
+    PrimitiveDataViewType <-- TimeSpanDataViewType
+    PrimitiveDataViewType <-- DateTimeOffsetDataViewType
+    DataViewType <-- StructuredDataViewType
+    StructuredDataViewType <-- VectorDataViewType
+    StructuredDataViewType <-- ImageDataViewType
+    StructuredDataViewType <-- OnnxSequenceType
+    StructuredDataViewType <-- OnnxMapType
