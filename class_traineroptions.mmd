@@ -1,6 +1,6 @@
 classDiagram 
 class LightGbmTrainerBase_OptionsBase {
-  NameMapping : Dictionary<string, string>
+  NameMapping : Dictionary~string, string~
   BatchSize
   Booster : BoosterParameterBase_OptionsBase
   BoosterFactory
@@ -45,6 +45,21 @@ TrainerInputBaseWithWeight <-- TrainerInputBaseWithGroupId
 TrainerInputBaseWithLabel <-- TrainerInputBaseWithWeight
 TrainerInputBase <-- TrainerInputBaseWithLabel
 
+class LightGbmRegressionTrainer_Options {
+  EvaluationMetric : EvaluateMetricType
+  ToDictionary(:IHost) : Dictionary~string, string~
+}
+class LightGbmRegressionTrainer_Options_EvaluateMetricType {
+  None 
+  Default 
+  MeanAbsoluteError 
+  RootMeanSquareError 
+  MeanSquaredError
+}
+<<enum>> LightGbmRegressionTrainer_Options_EvaluateMetricType
+
+LightGbmTrainerBase_OptionsBase <-- LightGbmRegressionTrainer_Options
+
 class BoosterParameterBase_OptionsBase {
     FeatureFraction
     L1Regularization 
@@ -55,6 +70,7 @@ class BoosterParameterBase_OptionsBase {
     SubsampleFraction 
     SubsampleFrequency
     GetBooster() : BoosterParameterBase
+    BuildOptions() : BoosterParameterBase
 }
 class GradientBooster_Options {
   BuildOptions()
@@ -70,6 +86,7 @@ class DartBooster_Options {
 class IBoosterParameterFactory {
    CreateComponent(:IHostEnvironment) : BoosterParameterBase
 }
+<<interface>> IBoosterParameterFactory
 IBoosterParameterFactory <|-- BoosterParameterBase_OptionsBase
 BoosterParameterBase_OptionsBase <|-- GradientBooster_Options
 BoosterParameterBase_OptionsBase <|-- DartBooster_Options
@@ -81,7 +98,7 @@ class BoosterParameterBase {
     BoosterOptions : BoosterParameterBase_OptionsBase
     NameMapping : Dictionary~string, string~
     UpdateParameters(Dictionary~string, object~)
-    BuildFactory()
+    *BuildFactory()
 }
 class GradientBooster {
     BoosterName
