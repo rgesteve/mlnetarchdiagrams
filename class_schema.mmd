@@ -25,7 +25,19 @@ classDiagram
     class StructuredDataViewType
     class VectorDataViewType
     class TextDataViewType
-    class NumberDataViewType
+    class NumberDataViewType {
+      Byte
+      SByte 
+      Single
+      Double
+      Int16
+      Int32
+      Int64
+      UInt16
+      UInt32
+      UInt64
+      ToString() : string
+    }
     class RowIdDataViewType
     class BooleanDataViewType
     class DateTimeDataViewType
@@ -48,3 +60,22 @@ classDiagram
     StructuredDataViewType <-- ImageDataViewType
     StructuredDataViewType <-- OnnxSequenceType
     StructuredDataViewType <-- OnnxMapType
+
+    class SchemaShape {
+      Count
+      Create(:DataViewSchema)
+      GetColumnTypeShape()
+      GetEnumerator()
+      IEnumerable.GetEnumerator()
+      TryFindColumn()
+    }
+    class SchemaShape_Column {
+      Annotations : SchemaShape
+      IsKey : bool 
+      IsValid 
+      ItemType 
+      Kind 
+      Name
+      GetTypeString()
+    }
+    IReadOnlyList~SchemaShape_Column~ <-- SchemaShape
