@@ -143,17 +143,17 @@ classDiagram
       SaveCore()
       SaveModel()
       ShouldUseParallelCursors()
-      WantParallelCursors()
+      WantParallelCursors(predicate : Func<int, bool>) : bool
     }
 
     class GenericScorer {
       OutputSchema
-      ApplyToDataCore
-      Create
-      GetBindings
-      GetGetters
+      ApplyToDataCore()
+      Create()
+      GetBindings()
+      GetGetters()
       SaveCore : (:ModelSaveContext)
-      WantParallelCursors
+      WantParallelCursors(predicate : Func<int, bool>) : bool
     }
     class BinaryClassifierScorer
     class PredictedLabelScorerBase {
