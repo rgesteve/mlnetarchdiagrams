@@ -145,6 +145,7 @@ classDiagram
       ShouldUseParallelCursors()
       WantParallelCursors(predicate : Func<int, bool>) : bool
     }
+    <<abstract>> RowToRowScorerBase
 
     class GenericScorer {
       OutputSchema
@@ -155,6 +156,8 @@ classDiagram
       SaveCore : (:ModelSaveContext)
       WantParallelCursors(predicate : Func<int, bool>) : bool
     }
+    <<sealed>> GenericScorer
+    
     class BinaryClassifierScorer
     class PredictedLabelScorerBase {
         Bindings
