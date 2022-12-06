@@ -61,9 +61,19 @@ classDiagram
     StructuredDataViewType <-- OnnxSequenceType
     StructuredDataViewType <-- OnnxMapType
 
+    class DataViewSchema_Annotations {
+      Empty
+      Schema
+      CheckGetter
+      GetGetter
+      GetGetterInternal
+      GetValue
+      ToString() : string
+    }    
+
     class SchemaShape {
       Count
-      Create(:DataViewSchema)
+      Create(:DataViewSchema) : SchemaShape
       GetColumnTypeShape()
       GetEnumerator()
       IEnumerable.GetEnumerator()

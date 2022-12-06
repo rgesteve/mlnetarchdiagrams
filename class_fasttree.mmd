@@ -1,4 +1,21 @@
 classDiagram 
+    class InternalTreeEnsemble {
+      NumTrees: int
+      Trees : IEnumerable~InternalRegressionTree~
+      Bias : double
+      AddTree(:InternalRegressionTree)
+      AddTreeAt(:InternalRegressionTree, index : int)
+      GetTreeAt(index : int) : InternalRegressionTree
+      RemoveTree(index : int)
+      RemoveAfter(index : int)
+      AppendComments()
+      AsPfa()
+      GetDistribution()
+      GetFeatureContributions()
+      GetMaxFeatureIndex()
+      RemapFeatures()
+    }
+
     class InternalRegressionTree {
         _gainPValue
         _maxOutput : double
