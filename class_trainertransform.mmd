@@ -342,7 +342,7 @@ classDiagram
 
     class LightGbmTrainerBase~TOptions,TOutput,TTransformer,TModel~ {
       FeatureCount 
-      GbmOptions
+      GbmOptions : Dictionary~string, object~
       Info
       LightGbmTrainerOptions
       ParallelTraining
