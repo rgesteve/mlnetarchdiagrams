@@ -341,12 +341,12 @@ classDiagram
     TrainerEstimatorBase~TTransformer,TModel~  <-- TrainerEstimatorBaseWithGroupId~TTransformer,TModel~
 
     class LightGbmTrainerBase~TOptions,TOutput,TTransformer,TModel~ {
-      FeatureCount 
+      FeatureCount : int
       GbmOptions : Dictionary~string, object~
       Info
-      LightGbmTrainerOptions
+      LightGbmTrainerOptions : TOptions
       ParallelTraining
-      TrainedEnsemble
+      TrainedEnsemble : InternalTreeEnsemble
       CheckAndUpdateParametersBeforeTraining()
       CheckDataValid()
       ConstructCategoricalFeatureMetadata()
