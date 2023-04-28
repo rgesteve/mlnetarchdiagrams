@@ -58,7 +58,16 @@ class LightGbmRegressionTrainer_Options_EvaluateMetricType {
 }
 <<enum>> LightGbmRegressionTrainer_Options_EvaluateMetricType
 
+class LightGbmBinaryTrainer_Options {
+  EvaluationMetric : EvaluateMetricType
+  UnbalancedSets : bool
+  WeightOfPositiveExamples : double
+  Sigmoid : double
+  ToDictionary(:IHost) : Dictionary~string, string~
+}
+
 LightGbmTrainerBase_OptionsBase <-- LightGbmRegressionTrainer_Options
+LightGbmTrainerBase_OptionsBase <-- LightGbmBinaryTrainer_Options
 
 class BoosterParameterBase_OptionsBase {
     FeatureFraction
