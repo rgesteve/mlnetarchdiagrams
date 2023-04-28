@@ -1,10 +1,12 @@
  sequenceDiagram 
     participant  TB as  LightGBMTrainerBase
-    participant  LGBMTrainerOpt as  LightGbmTrainerOptions
+    participant  LGBMRegTrainerOpt as  LightGbmRegressionTrainerOptions
+    participant  LGBMTrainerOpt as  LightGbmTrainerOptionsBase
     participant  BF as  BoosterFactory
     participant  BP as  BoosterParameterBase
     participant  BO as  BoosterOptions
-      TB->>LGBMTrainerOpt: LightGbmTrainerOptions.ToDictionary()
+      TB->>LGBMRegTrainerOpt: LightGbmTrainerOptions.ToDictionary()
+      LGBMRegTrainerOpt->>LGBMTrainerOpt: (base) LightGbmTrainerOptions.ToDictionary()
       LGBMTrainerOpt->> BF: BoosterFactory.CreateComponent()
       LGBMTrainerOpt->> BP: UpdateParameters()
       BP->>BO: GetType().GetFields()
