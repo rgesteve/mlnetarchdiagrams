@@ -103,11 +103,11 @@ BoosterParameterBase_OptionsBase <|-- DartBooster_Options
 LightGbmTrainerBase_OptionsBase *-- BoosterParameterBase_OptionsBase
 
 class BoosterParameterBase {
-    BoosterName
+    BoosterName : string
     BoosterOptions : BoosterParameterBase_OptionsBase
     NameMapping : Dictionary~string, string~
     UpdateParameters(Dictionary~string, object~)
-    *BuildFactory()
+    *BuildFactory() : () -> IBoosterParameterFactory
 }
 class GradientBooster {
     BoosterName
