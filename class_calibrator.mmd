@@ -1,7 +1,20 @@
 classDiagram 
-  class ValueMapperCalibratedModelParametersBase~T1,T2~ {
+
+  class CalibratedModelParametersBase~TSubModel,TCalibrator~ {
+    Host : IHost
+    SubModel : TSubModel
+    Calibrator : TCalibrator
+  }
+  
+  class ValueMapperCalibratedModelParametersBase~TSubModel,TCalibrator~ {
     SubModel
     Calibrator
+  }
+  
+  ValueMapperCalibratedModelParametersBase~TSubModel,TCalibrator~ -> CalibratedModelParametersBase~TSubModel,TCalibrator~
+  
+  class FeatureWeightsCalibratedModelParameters~TSubModel, TCalibrator~ {
+    GetFeatureWeights : (weights: ref VBuffer<float>)
   }
 
   class PlattCalibrator {
