@@ -3,3 +3,14 @@ classDiagram
     SubModel
     Calibrator
   }
+
+  class PlattCalibrator {
+    Offset : Double
+    Slope : Double
+    PredictProbability : (output : float, a : Double, b : Double) : float
+  }
+  
+  class ICalibrator {
+    PredictProbability : (:float) : float
+  }
+  <<interface>> ICalibrator
