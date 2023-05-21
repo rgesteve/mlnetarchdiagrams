@@ -1,0 +1,10 @@
+  sequenceDiagram 
+    participant  unk as  unknown
+    participant  PTB as  PredictionTransformerBase
+    participant  RTRSB as RowToRowScorerBase
+    participant  GS as  GenericScorer
+      unknown ->> PTB: Transform
+      PTB->>RTRSB: ApplyToData
+      activate RTRSB
+      RTRSB->>GS: Scorer.ApplyToDataCore
+      
