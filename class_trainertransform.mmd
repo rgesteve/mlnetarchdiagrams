@@ -1,8 +1,18 @@
 classDiagram 
 
+    class ITransformer {
+      GetOutputSchema(:DataViewSchema) : DataViewSchema
+      Transform(:IDataView) : IDataView
+      IsRowToRowMapper : bool
+      GetRowToRowMapper(:DataViewSchema) : IRowToRowMapper
+    }
+    <<interface>> ITransformer
+
     class IPredictionTransformer~TModel~ {
       Model : TModel
     }
+
+    ITransformer <-- IPredictionTransformer~TModel~
     
     class IFeaturePredictionTransformer {
         FeatureColumnName : string
@@ -286,11 +296,26 @@ classDiagram
     ISchemaBoundMapper <-- ISchemaBoundRowMapper
     ISchemaBoundRowMapper <-- SchemaBindablePredictorWrapperBase_SingleValueRowMapper
 
+    class IRowToRowMapper {
+      InputSchema : DataViewSchema
+      OutputSchema : DataViewSchema
+      GetDependencies() : IEnumerable~SchemaShape.Column~ 
+      GetRow(:DataViewRow, activeColumns : IEnumerable~DataViewSchema.Column~) : DataViewRow
+    }
+    <<interface>> IRowToRowMapper
+
     class IEstimator~TTransformer~ {
       Fit(:IDataView) : TTransformer
       GetOutputSchema(:SchemaShape) : SchemaShape
     }
     <<interface>> IEstimator~TTransformer~
+
+    class ITransformer {
+      GetOutputSchema(:SchemaShape) : SchemaShape
+      Transform(:IDataView) : IDataView
+      IsRowMapper : bool
+      GetRowToRowMapper :(inputSchema : DataViewSchema) : IRowToRowMapper
+    }    
 
     class ITrainerEstimator~TTransformer, TModel~ {
       Info : TrainerInfo

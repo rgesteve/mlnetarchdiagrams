@@ -3,7 +3,8 @@ class LightGbmTrainerBase_OptionsBase {
   NameMapping : Dictionary~string, string~
   BatchSize
   Booster : BoosterParameterBase_OptionsBase
-  BoosterFactory
+  BoosterFactory : IBoosterParameterFactory
+  _boosterParameter : BoosterParameterBase_OptionsBase
   CategoricalSmoothing
   EarlyStoppingRound
   HandleMissingValue
