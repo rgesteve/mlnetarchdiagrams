@@ -1,6 +1,43 @@
   sequenceDiagram 
-    participant  SFPTB as  SingleFeaturePredictionTransformerBase
+    participant  unk as unknown
+    participant  TEB_2 as class TrainerEstimatorBase~T1,T2~
+    participant RPT as class RegressionPredictionTransformer
+    participant  SFPTB as  SingleFeaturePredictionTransformerBase~TModel~
+    participant PTB as class PredictionTransformerBase~TModel~
+    participant SU as static class ScoreUtils
     participant  BM as  BindableMapper
     participant  SBPW as  SchemaBindablePredictorWrapper
-      SFPTB->>BM: ScoreUtils.GetSchemaBindableMapper
+    participant GS as GenericScorer
+      activate unk
+      unk ->> TEB_2: Fit
+      activate TEB_2
+      TEB_2->>TEB_2: TrainTransfomer
+      activate TEB_2
+      TEB_2->>TEB_2: TrainModelCore
+      TEB_2->> TEB_2 : MakeTransformer
+      deactivate TEB_2
+      TEB_2->>RPT: Call RegressionPredictionTransformer constructor
+      activate RPT
+      RPT->>SFPTB: Call SingleFeaturePredictionTransformerBase constructor
+      activate SFPTB
+      SFPTB->>PTB: Call PredictionTransformerBase constructor
+      PTB->>PTB: Set Model
+      PTB->>PTB: Set Schema
+      activate SFPTB
+      SFPTB->>SU: Call ScoreUtils.GetSchemaBindableMapper and assign it to `BindableMapper`
+      activate SU
+      SU ->> SBPW : Call constructor for SchemaBindablePredictorWrapper
+      activate SBPW
+      SBPW -->> SU : Return SchemaBindablePredictorWrapper
+      deactivate SBPW
+      SU -->> SFPTB : Return SchemaBindablePredictorWrapper
+      deactivate SU
+      SFPTB->>SFPTB: Set `BindableMapper`
+      activate RPT
+      RPT->>SFPTB : GetGenericScorer
+      activate SFPTB
+      SFPTB ->> GS : GenericScorer ctor
+      activate GS
+      GS -->> SFPTB : Return GenericScorer
+      deactivate GS
       

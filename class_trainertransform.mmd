@@ -480,3 +480,26 @@ classDiagram
     class MulticlassClassificationScorer {
     }
     PredictedLabelScorerBase <-- MulticlassClassificationScorer 
+    
+    class OneToOneTransformerBase {
+      OutputSchema
+      ActiveSource
+      ColumnIndex (info : int)
+      CreateGetters
+      ExceptGetSlotCursor
+      GetColumnTypeCore
+      GetDependenciesCore
+      GetGetterCore
+      GetRowCursorCore
+      GetRowCursorSet
+      GetSlotCursorCore
+      GetSlotTypeCore
+      GetSrcGetter
+      GetSrcGetter~T~
+      MapColumnIndex
+      SaveBase
+      ShouldUseParallelCursors
+      WantParallelCursors(:Func<int, bool>) : bool
+    }
+    <<abstract>> OneToOneTransformerBase
+    RowToRowMapperTransformBase <-- OneToOneTransformerBase
