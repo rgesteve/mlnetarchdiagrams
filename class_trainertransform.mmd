@@ -51,11 +51,28 @@ classDiagram
         InitializationLogic()
         SaveCore()
     }
+    class MulticlassPredictionTransformer~TModel~ {
+        _trainLabelColumn : string
+        _scoreColumn : string
+        _predictedLabelColumn : string
+        SetScorer() 
+        InitializationLogic()
+        SaveCore()
+    }
+    class ClusteringPredictionTransformer~TModel~ {
+        SaveCore(: ModelSaveContext) : void
+        GetVersionInfo() : VersionInfo
+    }
+    class RankingPredictionTransformer~TModel~ {
+        SaveCore(: ModelSaveContext) : void
+    }
 
     IPredictionTransformer~TModel~ <-- PredictionTransformerBase  
     PredictionTransformerBase <-- SingleFeaturePredictionTransformerBase~TModel~
     SingleFeaturePredictionTransformerBase~TModel~ <-- RegressionPredictionTransformer~TModel~
     SingleFeaturePredictionTransformerBase~TModel~ <-- BinaryPredictionTransformer~TModel~
+    SingleFeaturePredictionTransformerBase~TModel~ <-- ClusteringPredictionTransformer~TModel~
+    SingleFeaturePredictionTransformerBase~TModel~ <-- RankingPredictionTransformer~TModel~
 
     class IValueMapper {
         InputType : DataViewType
@@ -114,6 +131,7 @@ classDiagram
     class IDataTransform {
       Source : IDataView
     }
+    <<interface>> IDataTransform
     class TransformBase {
         Host : IHost 
         Source : IDataView
@@ -414,3 +432,51 @@ classDiagram
       MakeTransformer()
     }
     LightGbmTrainerBase~TOptions,float,TTransformer,TModel~ <-- LightGbmRegressionTrainer
+
+    class ITransformTemplate {
+      ApplyToData(:IHostEnvironment, :IDataView) : IDataTransform
+    }
+    <<interface>> ITransformTemplate
+    IDataTransform <-- ITransformTemplate
+    class IDataScorerTransform {
+    }
+    <<interface>> IDataScorerTransform
+    class RowToRowMapperTransformBase {
+      InputSchema : DataViewSchema
+      CreateGetters()
+      GetDependenciesCore()
+      IRowToRowMapper.GetDependencies()
+      IRowToRowMapper.GetRow()
+      MapColumnIndex(isSrc: out bool, col: int)
+    }
+    <<abstract>> RowToRowMapperTransformBase
+    RowToRowTransformBase <-- RowToRowMapperTransformBase
+    IRowToRowMapper <-- RowToRowMapperTransformBase
+    class RowToRowScorerBase {
+      _getGetterFromRowMethodInfo
+      ApplyToData
+      ApplyToDataCore
+      Bindable
+      CreateGetters
+      GetActive
+      GetBinding
+      GetDependenciesCore
+      GetGetterFromRow
+      GetGetterFromRow~T~
+      GetGetters
+      GetGettersFromRow
+      GetRowCursorCore
+      GetRowCursorSet
+      ITransformTemplate.ApplyToData
+      MapColumnIndex
+      SaveCore
+    }
+    <<abstract>> RowToRowScorerBase
+    RowToRowMapperTransformBase <-- RowToRowScorerBase
+    class PredictedLabelScorerBase {
+    }
+    <<abstract>> PredictedLabelScorerBase
+
+    class MulticlassClassificationScorer {
+    }
+    PredictedLabelScorerBase <-- MulticlassClassificationScorer 
