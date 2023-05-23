@@ -135,16 +135,22 @@ classDiagram
     class TransformBase {
         Host : IHost 
         Source : IDataView
-        CanShuffle
+        CanShuffle : bool
+        OutputSchema : DataViewSchema
         IDataView.Schema
-        GetRowCount()
-        GetRowCursor()
-        GetRowCursorCore()
-        GetRowCursorSet()
+        ICanSaveModel.Save(:ModelSaveContext) : void
+        SaveModel(:ModelSaveContext) : void
+        GetRowCount() : long?
+        GetRowCursor(:IEnumerable~DataViewSchema.Column~, :Random) : DataViewRowCursor
+        GetRowCursorCore(:IEnumerable~DataViewSchema.Column~, :Random) : DataViewRowCursor
+        GetRowCursorSet(:IEnumerable~DataViewSchema.Column~, :int, :Random) : DataViewRowCursor[]
+        ShouldUseParallelCursors(:Func~int,bool~) : bool?
     }
+    <<abstract>> TransformBase
     class RowToRowTransformBase {
-      GetRowCount()
+      GetRowCount() : long?
     }
+    <<abstract>> RowToRowTransformBase
     class RowToRowMapperTransformBase {
       InputSchema
       CreateGetters()
@@ -152,7 +158,13 @@ classDiagram
       IRowToRowMapper.GetDependencies()
       IRowToRowMapper.GetRow()
       MapColumnIndex()
-    }       
+    }
+
+    class IDataScorerTransform {
+    }
+    <<interface>> IDataScorerTransform
+    IDataTransform <-- IDataScorerTransform
+
     class RowToRowScorerBase {
       Bindable
       ApplyToData (:IHostEnvironment, :IDataView)
@@ -174,6 +186,7 @@ classDiagram
       WantParallelCursors(predicate : Func<int, bool>) : bool
     }
     <<abstract>> RowToRowScorerBase
+    IDataScorerTransform <-- RowToRowScorerBase
 
     class GenericScorer {
       OutputSchema
@@ -185,6 +198,14 @@ classDiagram
       WantParallelCursors(predicate : Func<int, bool>) : bool
     }
     <<sealed>> GenericScorer
+
+    class GenericScorer_Bindings {
+      Create(:ModelLoadContext, :IHostEnvironment, :ISchemaBindableMapper, :DataViewSchema) : GenericScorer_Bindings
+      ApplyToSchema(:IHostEnvironment, :DataViewSchema) : GenericScorer_Bindings
+      SaveModel(:ModelSaveContext) : void
+    }
+
+    BindingsBase <-- GenericScorer_Bindings
     
     class BinaryClassifierScorer
     class PredictedLabelScorerBase {
@@ -217,8 +238,24 @@ classDiagram
       SaveModel()
     }
     class RowToRowScorerBase_BindingsBase {
+      Mapper : ISchemaBoundMapper
+      Suffix : string
+      DerivedColumnnCount : int
+      _crtScoreSet : uint
+      _getScoreColumnSetId : AnnotationUtils_AnnontationGetter~uint~
       RowToRowMapper : ISchemaBoundRowMapper
+      GetOutputNames(:ISchemaBoundMapper, suffix : string, namesDerived : string[]) : string[]
+      LoadBaseInfo()
+      SaveBase()
+      SaveModel()
+      GetColumnTypeCore()
+      GetAnnotationsTypesCore()
+      GetAnnotationTypeCore()
+      GetAnnotationCore~TValue~()
+      GetActiveMapperColumns(:bool[]) : Func~int,bool~
+      GetScoreColumnSetId(iinfo : int, dst : ref uint)
     }
+    RowToRowScorerBase_BindingsBase ..> ISchemaBoundMapper
     class ScorerBindingsBase {
       DerivedColumnnCount
       Suffix : string
@@ -234,6 +271,7 @@ classDiagram
       SaveModel()
       ScorerBindingsBase()
     }
+    <<abstract>> ScorerBindingsBase
     class ColumnBindingsBase {
       Input : DataViewSchema
       AsSchema : DataViewSchema
@@ -296,6 +334,7 @@ classDiagram
       Bindable : ISchemaBindableMapper
       GetInputColumnRoles : () : IEnumerable~KeyValuePair~RoleMappedSchema.ColumnRole, string~~
     }
+    ISchemaBoundMapper ..> ISchemaBindableMapper : <<use>>
     class ISchemaBoundRowMapper {
         InputSchema : DataViewSchema
         GetDependenciesForNewColumns()
