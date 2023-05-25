@@ -223,8 +223,6 @@ classDiagram
     IDataView <-- IDataTransform
     IDataTransform <-- TransformBase
     TransformBase <-- RowToRowTransformBase
-    RowToRowTransformBase <-- RowToRowMapperTransformBase 
-    RowToRowMapperTransformBase <-- RowToRowScorerBase
     RowToRowScorerBase <-- GenericScorer
     PredictedLabelScorerBase <-- BinaryClassifierScorer
     RowToRowScorerBase <-- PredictedLabelScorerBase
@@ -275,6 +273,12 @@ classDiagram
     class ColumnBindingsBase {
       Input : DataViewSchema
       AsSchema : DataViewSchema
+      InfoCount : int
+      _nameToInfoIndex : Dictionary~string,int~
+      _names : string[]
+      _mapIinfoToCol : int[]
+      _colMap : int[]
+      _convertedSchema : Lazy~DataViewSchema~
       CreateSchema() : DataViewSchema
       GetAnnotationCore()
       GetAnnotationGetterDelegate()
@@ -287,6 +291,7 @@ classDiagram
       TryGetColumnIndex(name : string, out int col)
       TryGetColumnIndexCore(name : string, out int info)
     }
+    <<abstract>> ColumnBindingsBase
     RowToRowScorerBase_BindingsBase <-- GenericScorer_Bindings
     ScorerBindingsBase <-- RowToRowScorerBase_BindingsBase
     ColumnBindingsBase <-- ScorerBindingsBase
@@ -488,6 +493,7 @@ classDiagram
       IRowToRowMapper.GetRow()
       MapColumnIndex(isSrc: out bool, col: int)
     }
+    ITransformTemplate <-- IDataScorerTransform
     <<abstract>> RowToRowMapperTransformBase
     RowToRowTransformBase <-- RowToRowMapperTransformBase
     IRowToRowMapper <-- RowToRowMapperTransformBase
